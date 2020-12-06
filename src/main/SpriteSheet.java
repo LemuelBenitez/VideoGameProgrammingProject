@@ -1,24 +1,41 @@
 package main;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 public class SpriteSheet {
 
-	private BufferedImage image;
-	//private BufferedImage image;
-	private BufferedImage[] idleSprite;
+	private static BufferedImage spriteSheet;
+    private static final int TILE_SIZE = 32;
+    
+    /*
+     * public SpriteSheet(BufferedImage) {
+     * this.image = image;
+     */
 
-	public SpriteSheet(BufferedImage bufferedImage) {
-		this.image = bufferedImage;
-	}
+    public static BufferedImage loadSprite(String file) {
 
-	public BufferedImage grabImage(int col, int row, int width, int height) {
+        BufferedImage sprite = null;
 
-		BufferedImage img = image.getSubimage((col * 32) - 32, (row * 32) - 32, width, height);
-		return img;
-	}
+        try {
+            sprite = ImageIO.read(new File(String.format("resource/%s.png", file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        return sprite;
+    }
+
+    public static BufferedImage getSprite(int xGrid, int yGrid) {
+
+        if (spriteSheet == null) {
+            spriteSheet = loadSprite("player");
+        }
+
+        return spriteSheet.getSubimage(xGrid * TILE_SIZE, yGrid * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
 
 }
